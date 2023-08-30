@@ -1,5 +1,6 @@
 package net.toiletmc.toiletpapi;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.Configurable;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.lucko.spark.api.Spark;
@@ -78,7 +79,7 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
                 }
             }
             case "tab_footer" -> {
-                return tabFooter;
+                return PlaceholderAPI.setPlaceholders(player, tabFooter);
             }
         }
         return "";
