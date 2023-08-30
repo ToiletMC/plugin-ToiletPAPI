@@ -15,14 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
-    private String footer;
+    private String tabFooter;
     private String fixedWorldEmoji;
     private Spark spark;
 
     @Override
     public Map<String, Object> getDefaults() {
         Map<String, Object> defaults = new HashMap<>();
-        defaults.put("footer", "请修改默认页脚信息");
+        defaults.put("tab-footer", "请修改默认页脚信息");
         defaults.put("fixed-world-emoji", "none");
         return defaults;
     }
@@ -38,7 +38,7 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
             this.unregister();
         }
 
-        footer = this.getString("footer", "请修改默认页脚信息");
+        tabFooter = this.getString("tab-footer", "请修改默认页脚信息");
         fixedWorldEmoji = this.getString("fixed-world-emoji", "none");
 
         return super.register();
@@ -47,18 +47,24 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         switch (params) {
-            case "worldemoji" -> {
+            case "emoji_world" -> {
                 if (!fixedWorldEmoji.equals("none")) {
                     return fixedWorldEmoji;
                 }
 
-                switch (player.getWorld().getName()) {
-                    case "resource_world" -> {
-                        return "§7⛏";
-                    }
+                if (player.getWorld().getName().equals("resource_world")) {
+                    return "§7⛏";
                 }
             }
-            case "tpsemoji" -> {
+            case "emoji_world_time" -> {
+                long gameTime = player.getWorld().getTime() % 24000;
+                if (gameTime >= 0 && gameTime <= 12000) {
+                    return "§6☀";
+                } else {
+                    return "§e\uD83C\uDF1A";
+                }
+            }
+            case "emoji_tps" -> {
                 DoubleStatistic<StatisticWindow.TicksPerSecond> tps = spark.tps();
                 double tpsLast10Secs = tps.poll(StatisticWindow.TicksPerSecond.SECONDS_10);
                 if (tpsLast10Secs >= 18) {
@@ -71,16 +77,8 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
                     return "§4\uD83C\uDF11";
                 }
             }
-            case "worldtimeemoji" -> {
-                Long gameTime = player.getWorld().getTime() % 24000;
-                if (gameTime >= 0 && gameTime <= 12000) {
-                    return "§6☀";
-                } else {
-                    return "§e\uD83C\uDF1A";
-                }
-            }
-            case "footer" -> {
-                return footer;
+            case "tab_footer" -> {
+                return tabFooter;
             }
         }
         return "";
