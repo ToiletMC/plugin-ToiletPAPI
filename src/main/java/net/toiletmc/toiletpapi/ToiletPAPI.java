@@ -79,6 +79,9 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
                 }
             }
             case "tab_footer" -> {
+                if (player.getWorld().getName().equals("resource_world")) {
+                    return "&f&l资源世界，请勿建造";
+                }
                 return PlaceholderAPI.setPlaceholders(player, tabFooter);
             }
         }
