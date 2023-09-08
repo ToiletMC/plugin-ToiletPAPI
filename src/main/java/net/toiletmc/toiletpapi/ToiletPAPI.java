@@ -18,6 +18,7 @@ import java.util.Map;
 public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
     private String tabFooter;
     private String fixedWorldEmoji;
+    private boolean isEnabledNameColor;
     private Spark spark;
 
     @Override
@@ -25,6 +26,7 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
         Map<String, Object> defaults = new HashMap<>();
         defaults.put("tab-footer", "请修改默认页脚信息");
         defaults.put("fixed-world-emoji", "none");
+        defaults.put("name-color", false);
         return defaults;
     }
 
@@ -41,6 +43,7 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
 
         tabFooter = this.getString("tab-footer", "请修改默认页脚信息");
         fixedWorldEmoji = this.getString("fixed-world-emoji", "none");
+        isEnabledNameColor = this.getBoolean("name-color", false);
 
         return super.register();
     }
@@ -50,11 +53,11 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
         switch (params) {
             case "emoji_world" -> {
                 if (!fixedWorldEmoji.equals("none")) {
-                    return fixedWorldEmoji;
+                    return fixedWorldEmoji + "§r" + getNameColor(player);
                 }
 
                 if (player.getWorld().getName().equals("resource_world")) {
-                    return "§7⛏";
+                    return "§7⛏§r";
                 }
             }
             case "emoji_world_time" -> {
@@ -86,6 +89,15 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
             }
         }
         return "";
+    }
+
+    private @NotNull String getNameColor(Player player) {
+        if (isEnabledNameColor) {
+            return player.getDisplayName().startsWith("§") && !player.getDisplayName().startsWith("§7")
+                    ? player.getDisplayName().substring(0, 2) : "";
+        } else {
+            return "";
+        }
     }
 
     @Override
