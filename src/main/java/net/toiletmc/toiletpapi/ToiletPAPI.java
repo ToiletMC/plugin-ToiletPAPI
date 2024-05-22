@@ -56,7 +56,7 @@ public class ToiletPAPI extends PlaceholderExpansion implements Configurable {
                     return fixedWorldEmoji + "§r" + getNameColor(player);
                 }
 
-                if (player.getWorld().getName().equals("resource_world")) {
+                if (player.getWorld().getName().startsWith("resource_")) {
                     return "§7⛏§r";
                 }
             }
